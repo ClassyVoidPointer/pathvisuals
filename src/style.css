@@ -1,0 +1,90 @@
+:root {
+
+}
+:root {
+    --border-width: 1px;
+    --button-border: 2px;
+    --button-border-color: blue;
+    --button-border-width: 2px;
+    --button-width: 7.5rem;
+    --button-height: 3rem;
+    --button-background: cyan;
+    --button-border-radius: 5px;
+}
+
+html, body {
+    padding: 0;
+    border: 0;
+    height: 100vh;
+    width: 100vh;
+    margin: 0;
+}
+
+#app {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+}
+
+#algo-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+}
+
+#algo-toolbar {
+    height: 20%;
+}
+
+#algo-grid {
+    display: grid;
+    height: 75%;
+    width: 75%;
+    gap: 0rem;
+}
+
+#algo-grid-inputs-container {
+    margin-top: 2rem;
+    display: flex;
+    column-gap: 2rem;
+}
+
+.input-field {
+    width: 5rem;
+}
+
+
+.algo-obstacle-cell {
+    background-color: black; 
+}
+
+.algo-source-activated {
+    background-color: green;
+}
+
+.algo-target-activated {
+    background-color: red;
+}
+
+.algo-cell-full {
+    border: var(--border-width) solid black;
+}
+
+.algo-first-row-cell {
+    border-top: var(--border-width) solid black;
+}
+
+.algo-first-col-cell {
+    border-left: var(--border-width) solid black;
+}
+
+
+.algo-cell {
+    border-bottom: var(--border-width) solid black;
+    border-right: var(--border-width) solid black;
+}

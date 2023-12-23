@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PathVisuals</title>
+    <link rel="stylesheet" href="/src/style.css">
+
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+  </head>
+  <body>
+    <div id="app">
+	<div id="algo-container">
+	    <div id="algo-toolbar">
+		<div id="algo-algo-buttons-container">
+		    <button id="algo-button-set-source" class="btn-flat waves-effect waves-teal">Set source</button>
+		    <button id="algo-button-set-target" class="btn-flat waves-effect waves-teal">Set target</button>
+		    <button id="algo-button-set-obstacles" class="btn-flat waves-effect waves-teal">Set obstacles</button>
+		    <button id="algo-button-run" class="btn-flat waves-effect waves-teal">Run</button>
+		    <button id="algo-button-step-one" class="btn-flat waves-effect waves-teal hide">Step one</button>
+		    <button id="algo-button-clear" class="btn-flat waves-effect waves-teal hide">Clear</button>
+		    <button id="algo-button-step-all" class="btn-flat waves-effect waves-teal hide">Step all</button>
+		</div>
+		<div id="algo-grid-inputs-container">
+		    <div class="input-field">
+			<input type="number" min="5" max="30" value="5" id="algo-input-row-number">
+			<label for="algo-input-row-number">Rows</label>
+		    </div>
+		    <div class="input-field">
+			<input type="number" min="5" max="30" value="5" id="algo-input-col-number">
+			<label for="algo-input-col-number">Cols</label>
+		    </div>
+		    <div class="input-field">
+			<input type="number" min="0" max="20" value="0" id="algo-input-gap">
+			<label for="algo-input-gap">Gap</label>
+		    </div>
+		    <div class="input-field">
+			<input type="number" min="1" max="8" value="1" id="algo-input-border">
+			<label for="algo-input-border">Border</label>
+		    </div>
+		</div>
+	    </div>
+	    <div id="algo-grid">
+	    </div>
+	</div>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
