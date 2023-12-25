@@ -1,4 +1,4 @@
-import { useGrid } from "./grid";
+import { createVisualizer } from "./visualizer";
 
-const grid = useGrid();
-grid.create(5, 5);
+const visualizer = createVisualizer();
+visualizer.setup();
