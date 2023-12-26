@@ -19,11 +19,13 @@ const useLogicState = () => {
     const goto_initial_source_state = () => {
 	algo_is_setting_source = false;	
 	algo_is_source_set = false;
+	algo_is_runnable = false
     }
 
     const goto_initial_target_state = () => {
 	algo_is_setting_target = false;	
 	algo_is_target_set = false;
+	algo_is_runnable = false
     }
 
     const goto_initial_obs_state = () => {

@@ -152,6 +152,7 @@ export const useDijkstra = () => {
     let previous_curr = -1;
 
     const visit_neighbours = (currnode: number, currweight: number) => {
+	// if this node has no neighbours then the algorithm is over
 	const ns = AlgoGrid.get_neighbours_as_indexes(currnode);
 	for (let n of ns) {
 	    if (_is_visited(n)) continue;
@@ -229,10 +230,8 @@ export const useDijkstra = () => {
 	    return true;
 	}
 	
-	// first deactivate the old neighbours
-	visit_neighbours(currnode, currweight);
+	visit_neighbours(currnode, currweight)
 
-	// mark it as visited and activate it
 	_mark_visited(currnode);
 	gridUiState.add_text_weight(currnode, currweight);
 

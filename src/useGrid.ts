@@ -15,18 +15,19 @@ const createGrid = () => {
     const set_cols = (_cols: number) => {
 	cols = _cols;
 	total_cells = cols * rows;
+	unset_all();
     }
 
     const set_rows = (_rows: number) => {
 	rows = _rows;
 	total_cells = rows * cols;
+	unset_all();
     }
 
     const create = () => {
 	grid = Array(rows * cols).fill(Infinity);	
 	_set_source_from_index();
 	_set_obstacles_from_indexes();
-	console.log(rows, cols, source, target, obstacles);
 	total_cells = rows * cols;
     }
 
@@ -106,6 +107,10 @@ const createGrid = () => {
 	    }
 	}
 	return false;
+    }
+
+    const reset_obstacles = () => {
+	obstacles = [];
     }
 
     const save_obstacle = (row: number, col: number) => {
@@ -309,7 +314,8 @@ const createGrid = () => {
 	get_cells,
 	get_total_cells,
 	reset,
-	reset_weights
+	reset_weights,
+	reset_obstacles,
     }
 }
 

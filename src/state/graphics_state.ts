@@ -385,17 +385,31 @@ const useGridUIState = () => {
 
     }
 
-    gridEl.addEventListener("click", (e) => {
+    gridEl.addEventListener("mousedown", (e) => {
 	const mouseX = e.clientX;
 	const mouseY = e.clientY;
 	return handleMouseDown(mouseX, mouseY);
     });
+
+    let mouse_over_activated = false;
+    gridEl.addEventListener("mouseover", (e) => {
+	if (gridLogicState.is_setting_obs() && mouse_over_activated) {
+	    const mouseX = e.clientX;
+	    const mouseY = e.clientY;
+	    handleMouseDown(mouseX, mouseY);
+	}
+    })
+
+    gridEl.addEventListener("mouseup", (e) => {
+	mouse_over_activated = false;
+    })
 
     const handleMouseDown = (x: number, y: number) => {
 	const coords: { row: number, col: number } | null = _get_coordinates(grid_settings, x, y);
 	if (coords === null) return;
 	const { row, col } = coords;
 	if (gridLogicState.is_setting_source()) {
+	    if (!AlgoGrid.can_be_source(row, col)) return;
 	    activate_source_cell(row * grid_settings.cols + col);
 	    
 	    // save the source into the actual grid that will be used 
@@ -410,6 +424,7 @@ const useGridUIState = () => {
 	}
 
 	else if (gridLogicState.is_setting_target()) {
+	    if (!AlgoGrid.can_be_target(row, col)) return;
 	    activate_target_cell(row * grid_settings["cols"] + col);
 	    
 	    // save the source into the actual grid that will be used 
@@ -423,8 +438,13 @@ const useGridUIState = () => {
 	}
 
 	else if (gridLogicState.is_setting_obs()) {
-	    activate_obs_cell(row * grid_settings.cols + col);
+	    const cell = row * grid_settings.cols + col;
+
+	    if (!AlgoGrid.can_be_obstacle(row, col)) return;
+
+	    activate_obs_cell(cell);
 	    
+	    mouse_over_activated = true;
 	    // save the source into the actual grid that will be used 
 	    // by dijkstra's algorithm
 	    AlgoGrid.save_obstacle(row, col);

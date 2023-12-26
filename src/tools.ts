@@ -110,6 +110,7 @@ const useToolsUI = () => {
 	    gridLogicState.goto_initial_obs_state();
 	    button_state.goto_initial_state(obs_button, "Set obstacles");
 	    gridUiState.deactivate_obs_cells();
+	    AlgoGrid.reset_obstacles();
 	}
     })
 
@@ -196,8 +197,6 @@ const useToolsUI = () => {
 
 	AlgoGrid.reset_weights();
 	dijkstra.reset();
-
-	console.log(AlgoGrid.get_cells());
 
 	gridUiState.set_initial_text_weights(AlgoGrid.get_cells());
 	gridLogicState.goto_running_state();
