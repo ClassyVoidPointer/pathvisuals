@@ -30,6 +30,16 @@ const createGrid = () => {
 	total_cells = rows * cols;
     }
 
+    const reset = () => {
+	source = null;
+	target = null;
+	obstacles = [];
+
+	for (let i = 0; i < total_cells; i++) {
+	    grid[i] = Infinity
+	}
+    }
+
     const get_source = () => source;
     const get_target = () => target
     const get_obstacles = () => obstacles;
@@ -72,6 +82,16 @@ const createGrid = () => {
 
     const set_weight_from_index = (index: number, val: number) => {
 	grid[index] = val;
+    }
+
+    const reset_weights = () => {
+	for (let i = 0; i < total_cells; i++) {
+	    const weight = grid[i];
+	    if (weight === 0 || weight === -1) {
+		continue;
+	    }
+	    grid[i] = Infinity;
+	}
     }
 
     const can_be_obstacle = (row: number, col: number): boolean => {
@@ -287,7 +307,9 @@ const createGrid = () => {
 	has_obstacles,
 
 	get_cells,
-	get_total_cells
+	get_total_cells,
+	reset,
+	reset_weights
     }
 }
 

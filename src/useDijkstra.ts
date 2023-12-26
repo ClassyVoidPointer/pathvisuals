@@ -5,17 +5,16 @@ import {gridLogicState} from "./state/logic_state";
 export const useDijkstra = () => {
     let target: number | null = null;
     let finished: boolean = false;
-    const queue: number[] = [];
-
+    let queue: number[] = [];
     let _qlength: number = 0;
 
-    const _visited_list = Array(AlgoGrid.get_total_cells()).fill(false);
+    let _visited_list = Array(AlgoGrid.get_total_cells()).fill(false);
     const _mark_visited = (gridindex: number) => {
 	_visited_list[gridindex] = true;
     }
-
     const _is_visited = (gridindex: number) => _visited_list[gridindex];
-    const _pred_list: Array<null | number> = Array(AlgoGrid.get_total_cells()).fill(null);
+
+    let _pred_list: Array<null | number> = Array(AlgoGrid.get_total_cells()).fill(null);
     const _set_pred = (mainnode: number, prednode: number) => {
 	_pred_list[mainnode] = prednode;
     }
@@ -173,7 +172,6 @@ export const useDijkstra = () => {
 	let final_path: number[] = [];
 	final_path.push(target as number);
 	let currnode = target as number;
-	console.log(AlgoGrid.get_cells())
 	const pred = _get_pred(currnode);
 	if (pred == null) {
 	    return [];
@@ -188,9 +186,6 @@ export const useDijkstra = () => {
 	return final_path;
     }
 
-    const step_all = () => {
-	while (!step_one()) { }
-    }
 
     const cleanup_previous_step = () => {
 	for (let n of previous_ns) { gridUiState.deactivate_n_cell(n); } 
@@ -202,14 +197,29 @@ export const useDijkstra = () => {
 
     }
 
-    const step_one = (): boolean => {
+    const reset = () => {
+	// first reset the queue
+	_qlength = 0;
+	queue = [];
+	_create_queue();
+
+	// then the visited and predecessor list
+	_visited_list = Array(AlgoGrid.get_total_cells()).fill(false);
+	_pred_list = Array(AlgoGrid.get_total_cells()).fill(null);
+
+	// TODO: should be potentially removed
+	finished = false;
+    }
+
+    const step_one = async (): Promise<boolean> => {
 	const currnode: number = _get_min_queue();
 	const currweight = AlgoGrid.get_weight_from_index(currnode);
-
+	
+	await new Promise(r => setTimeout(r, 5));
 	cleanup_previous_step();
 
 	// give a color to the current node
-	if (!AlgoGrid.is_target_from_index(currnode)) {
+	if (!AlgoGrid.is_target_from_index(currnode) && !AlgoGrid.is_source_from_index(currnode)) {
 	    gridUiState.activate_curr_cell(currnode);
 	}
 
@@ -230,6 +240,10 @@ export const useDijkstra = () => {
 	return false;
     }
 
+    const step_all = async () => {
+	while (!(await step_one())) { }
+    }
+
     const setup = () => {
 	_create_queue();
 	target = AlgoGrid.get_target();
@@ -243,5 +257,6 @@ export const useDijkstra = () => {
 	step_one,
 	step_all,
 	get_path,
+	reset,
     }
 }

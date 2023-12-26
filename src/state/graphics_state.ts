@@ -1,7 +1,4 @@
 import { AlgoGrid } from "../useGrid"
-import { 
-    _get_coordinates 
-} from "../helpers/grid_helpers";
 import { gridLogicState } from "./logic_state";
 import { toolbar } from "../tools";
 
@@ -81,7 +78,8 @@ const useGridUIState = () => {
     const deactivate_curr_cell = (cell: number) => {
 	const cellHTML = gridEl!.children[cell];
 	cellHTML.classList.remove(...colors.curr_cell); 
-	cellHTML.classList.add(...colors.visited_cell);
+	//cellHTML.classList.add(...colors.visited_cell);
+	activate_cell_visited(cell);
     }
 
     const activate_n_cell = (cell: number) => {
@@ -139,8 +137,8 @@ const useGridUIState = () => {
     const activate_cell_visited = (cell: number) => {
 	if (gridEl) {
 	    const cellHTML = gridEl.children[cell] as HTMLDivElement;
-	    visitedHTML.push(cellHTML);
 	    cellHTML.classList.add(...colors.visited_cell)
+	    visitedHTML.push(cellHTML);
 	} else {
 	    console.log("grid is null");
 	}
@@ -150,16 +148,16 @@ const useGridUIState = () => {
 	if (gridEl) {
 	    for (let cell of visitedHTML) {
 		cell.classList.remove(...colors.visited_cell)
+		visitedHTML = [];
 	    }
 	}
-	deactivate_all_path();
-	deactivate_all_visited();
     }
 
     const deactivate_all_path = () => {
 	if (gridEl) {
-	    for (let cell of visitedHTML) {
+	    for (let cell of final_path) {
 		cell.classList.remove(...colors.path);
+		final_path = [];
 	    }
 	} else {
 	    console.log("grid is null");
@@ -208,6 +206,18 @@ const useGridUIState = () => {
 	deactivate_all();
 	deactivate_all_path();
 	deactivate_all_visited();
+	remove_text_weight();
+    }
+
+    const reset_for_rerun = () => {
+	deactivate_all_path();
+	deactivate_all_visited();
+    }
+
+    const remove_text_weight = () => {
+	for (let cell of gridEl.children) {
+	    cell.textContent = '';
+	}
     }
 
     const update_rows = (rows: number) => {
@@ -354,6 +364,7 @@ const useGridUIState = () => {
 		    }
 		    cell.classList.add("algo-cell");
 		}
+		cell.classList.add("algo-cell-transition");
 		gridEl.appendChild(cell);
 	    }
 	}
@@ -385,7 +396,7 @@ const useGridUIState = () => {
 	if (coords === null) return;
 	const { row, col } = coords;
 	if (gridLogicState.is_setting_source()) {
-	    activate_source_cell(row * grid_settings["cols"] + col);
+	    activate_source_cell(row * grid_settings.cols + col);
 	    
 	    // save the source into the actual grid that will be used 
 	    // by dijkstra's algorithm
@@ -412,7 +423,7 @@ const useGridUIState = () => {
 	}
 
 	else if (gridLogicState.is_setting_obs()) {
-	    activate_obs_cell(row * grid_settings["cols"] + col);
+	    activate_obs_cell(row * grid_settings.cols + col);
 	    
 	    // save the source into the actual grid that will be used 
 	    // by dijkstra's algorithm
@@ -554,15 +565,16 @@ const useGridUIState = () => {
 
     const activate_obs_cell = (cell: number) => {
 	if (gridEl) {
-	    obsHTML.push(gridEl.children[cell] as HTMLDivElement);
-	    return gridEl.children[cell].classList.add(...colors["obstacle"]);
+	    const cellHTML = gridEl.children[cell] as HTMLDivElement;
+	    obsHTML.push(cellHTML);
+	    return cellHTML.classList.add(...colors["obstacle"]);
 	}
 	console.error("grid dom element is not set!");
     }
 
     const deactivate_source_cell = () => {
 	if (gridEl && sourceHTML) {
-	    sourceHTML.classList.remove(...colors["source"]);
+	    sourceHTML.classList.remove(...colors.source);
 	    sourceHTML = null;
 	 } else {
 	    console.error("grid dom element is not set!");
@@ -571,7 +583,7 @@ const useGridUIState = () => {
 
     const deactivate_target_cell = () => {
 	if (gridEl && targetHTML) {
-	    targetHTML.classList.remove(...colors["target"]);
+	    targetHTML.classList.remove(...colors.target);
 	    targetHTML = null;
 	} else {
 	    console.error("grid dom element is not set!");
@@ -581,7 +593,7 @@ const useGridUIState = () => {
     const deactivate_obs_cells = () => {
 	if (gridEl && obsHTML.length > 0) {
 	    for (let obs of obsHTML) {
-		obs.classList.remove(...colors["obstacle"]);
+		obs.classList.remove(...colors.obstacle);
 	    }
 	} else {
 	    console.error("grid dom element is not set!");
@@ -630,6 +642,7 @@ const useGridUIState = () => {
 	activate_n_cell,
 	deactivate_n_cell,
 	set_initial_text_weights,
+	reset_for_rerun
     }
 }
 

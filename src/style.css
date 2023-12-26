@@ -20,6 +20,7 @@ html, body {
 
 #app {
     display: flex;
+    flex-direction: column;
     height: 100%;
     width: 100%;
     justify-content: center;
@@ -82,8 +83,36 @@ html, body {
     border-left: var(--border-width) solid black;
 }
 
+.title-wrapper {
+    width: 100%;
+    height: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
 .algo-cell {
     border-bottom: var(--border-width) solid black;
     border-right: var(--border-width) solid black;
 }
+
+.algo-cell-transition {
+     transition: background 0 ease-out;
+     text-align: center;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -91,6 +91,21 @@ const useLogicState = () => {
 	algo_is_running = false;
     }
 
+    const goto_initial_state = () => {
+	algo_is_runnable = false;
+	algo_is_finished = false;
+	algo_is_running = false;
+
+	algo_is_setting_source = false;
+	algo_is_setting_target = false;
+	algo_is_setting_obs = false;
+
+	algo_is_source_set = false;
+	algo_is_target_set = false;
+	algo_is_obs_set = false;
+
+    }
+
     const is_initial_source_state = () => {
 	return !algo_is_setting_source && !algo_is_source_set;
     }
@@ -135,6 +150,8 @@ const useLogicState = () => {
 	    is_source_set: algo_is_source_set,
 	    is_target_set: algo_is_target_set,
 	    is_obs_set: algo_is_obs_set,
+	    is_runnable: algo_is_runnable,
+	    is_running: algo_is_running,
 	})
     }
 
@@ -156,6 +173,7 @@ const useLogicState = () => {
 	is_obs_set_state,
 	state_repr,
     // ========================
+	goto_initial_state,
 	goto_setting_obs_state,
 	goto_setting_source_state,
 	goto_setting_target_state,

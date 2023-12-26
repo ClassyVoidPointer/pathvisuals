@@ -19,6 +19,8 @@ const useToolsUI = () => {
     const run_button: HTMLButtonElement = document.getElementById("algo-button-run") as HTMLButtonElement;
     const step_one_button: HTMLButtonElement = document.getElementById("algo-button-step-one") as HTMLButtonElement;
     const step_all_button: HTMLButtonElement = document.getElementById("algo-button-step-all") as HTMLButtonElement;
+    const rerun_button: HTMLButtonElement = document.getElementById("algo-button-rerun") as HTMLButtonElement;
+    const clear_button: HTMLButtonElement = document.getElementById("algo-button-clear") as HTMLButtonElement;
 
     const input_row: HTMLInputElement = document.getElementById("algo-input-row-number") as HTMLInputElement;
     const input_col: HTMLInputElement = document.getElementById("algo-input-col-number") as HTMLInputElement;
@@ -174,8 +176,35 @@ const useToolsUI = () => {
     run_button.addEventListener("click", (e) => {
 	if (!gridLogicState.is_runnable_state()) return;
 	goto_running_state();
+
+	// 
+	gridLogicState.state_repr();
+	//
+	
 	AlgoGrid.create();
 	dijkstra = useDijkstra();
+
+	button_state.goto_initial_state(source_button, "Set source");
+	button_state.goto_initial_state(target_button, "Set target");
+	button_state.goto_initial_state(obs_button, "Set Obstacles");
+    })
+
+    rerun_button.addEventListener("click", (e) => {
+	// reset the ui state
+	// reset all the grid weights	
+	gridUiState.reset_for_rerun();
+
+	AlgoGrid.reset_weights();
+	dijkstra.reset();
+
+	console.log(AlgoGrid.get_cells());
+
+	gridUiState.set_initial_text_weights(AlgoGrid.get_cells());
+	gridLogicState.goto_running_state();
+
+	// remove and add the respective buttons
+	button_state.hide_buttons([e.target, clear_button])
+	button_state.show_buttons([step_one_button, step_all_button]);
     })
 
     const goto_running_state = () => {
@@ -185,22 +214,44 @@ const useToolsUI = () => {
     }
 
 
-    step_one_button.addEventListener("click", (e) => {
+    step_one_button.addEventListener("click", async (e) => {
 	if (!gridLogicState.is_running_state()) return;
-	if (dijkstra.step_one()) {
+	if (await dijkstra.step_one()) {
 	    const final_path = dijkstra.get_path();
 	    gridUiState.draw_final_path(final_path);
-	    console.log(final_path)
+	    goto_finished_state();
 	}
     })
 
-    step_all_button.addEventListener("click", (e) => {
+    step_all_button.addEventListener("click", async (e) => {
 	if (!gridLogicState.is_running_state()) return;
 
-	dijkstra!.step_all();
+	await dijkstra!.step_all();
 	const final_path = dijkstra.get_path();
-	console.log(final_path);
 	gridUiState.draw_final_path(final_path);
+
+	goto_finished_state();
+    })
+
+    const goto_finished_state = () => {
+	gridLogicState.goto_finished_state();
+	// show the rerun and clear buttons
+	button_state.show_buttons([rerun_button, clear_button]);
+	button_state.hide_buttons([step_one_button, step_all_button]);
+    }
+
+    clear_button.addEventListener("click", (e) => {
+	// hide the rerun button
+	button_state.hide_buttons([e.target, rerun_button, step_one_button, step_all_button]);
+	button_state.show_buttons([source_button, target_button, obs_button, run_button]);
+	// now call the clear method on the grid (ui)
+	gridUiState.clear();
+
+	// go back to the initial state in the grid logic
+	gridLogicState.goto_initial_state();
+
+	// now update the grid, removing the obstacles, source and target.
+	AlgoGrid.reset();	
     })
 
     return {
